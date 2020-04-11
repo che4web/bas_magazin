@@ -1,0 +1,14 @@
+
+{%extends 'base.html'%}
+{%block main_container%}
+<h2>Страница статьи {{object.id}}</h2>
+<a href={{main_url}}> ссылка на главную</a>
+
+<div>
+    <h2 >{{object.title}}</h2>
+    <div>{{object.text}}</div>
+    <div>{{object.date}}</div>
+    <div>{{object}}</div>
+
+</div>
+{%endblock%}

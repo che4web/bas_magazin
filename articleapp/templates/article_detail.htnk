@@ -1,0 +1,11 @@
+<h1> BAS Magazine</h1>
+<a href={{main_url}}> ссылка на главную</a>
+{% for art in article_list%}
+<div>
+    <h2>{{art.title}}</h2>
+    <div>{{art.text}}</div>
+    <div>{{art.date}}</div>
+    <div>{{art}}</div>
+
+</div>
+{%endfor%}

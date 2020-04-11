@@ -1,0 +1,14 @@
+
+<div>
+    <div class="article__author"> {{art.author.username}}</div>
+    <div class="article__date"> {{art.date}}</div>
+    <h2> <a href="{{art.get_absolute_url}}">{{art.title}}</a></h2>
+    <div>{{art.text|safe}} {%lorem 3 p%}</div>
+    <a href="{{art.get_absolute_url}}">
+        <button class="btn btn-primary">
+            читать далее
+        </button>
+    </a>
+</div>
+
+
