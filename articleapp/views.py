@@ -6,20 +6,27 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.core.exceptions import ValidationError
 # Create your views here.
+from django.http import JsonResponse
+import json
 
-from django import forms
+from articleapp.forms import SearcForm,ArticleModelForm
 
 from django.contrib.auth import logout
 
 from django.shortcuts import redirect
+from django.views.generic import DetailView,CreateView
 
 def logout_view(request):
     logout(request)
     return render(request,'logout.html',context)
 
-class SearcForm(forms.Form):
-    title = forms.CharField(label=  'Заголовок', max_length=100)
-    date = forms.DateField(label='Дата')
+def article_json(request,pk):
+    art = Article.objects.get(id=pk)
+    art_dict ={
+           'title':art.title,
+           'text':art.text
+        }
+    return JsonResponse(art_dict)
 
 def index(request):
     user = request.user
@@ -27,7 +34,9 @@ def index(request):
 
     user_list = User.objects.all().annotate(Count('article')).distinct()
     print("---")
+
     search_form =SearcForm(request.GET)
+
     context ={'article_list':art}
     if search_form.is_valid():
         art = art.filter(title__icontains=search_form.cleaned_data['title'])
@@ -38,17 +47,39 @@ def index(request):
 
 def article_detail(request,pk):
     art = Article.objects.get(id=pk)
-    if art.author == request.user:
-        context={'object':art}
-    else:
-        context={'object': "У вас нет прав"}
+    context={'object':art}
+    return render(request,'articleapp/article_detail.html',context)
 
+class ArticleDetailView(DetailView):
+    model = Article
+    def get_context_data(self,*args,**kwargs):
+        context = super(ArticleDetailView,self).get_context_data(*args,**kwargs)
+        context['text'] ="hello word"
+        return context
+
+class MyCreate(object):
+    def form_valid(self,form):
+        form.instance.author = request.user
+        return super(MyCreate,self).from_valid(form)
+
+class ArticleCreateView(CreateView,MyCreate):
+    model = Article
+    fields = "__all__"
+
+
+
+def article_form(request):
+    if request.POST:
+        form = ArticleModelForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.author = request.user
+            instance.save()
+            return redirect(instance.get_absolute_url())
+    else:
+        form  = ArticleModelForm()
+    context={'form':form}
     context['main_url'] = reverse('article-list')
-    return render(request,'article_detail.html',context)
-def article_form(request,pk):
-    art = Article.objects.get(id=pk)
-    art.save()
-    # some code
-    print('hello')
-    return render(request,'article_detail.html',context)
+    return render(request,'article_form.html',context)
+
 

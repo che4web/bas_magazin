@@ -20,5 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index,name='article-list'),
     path('logout/',views.logout,name='logout'),
-    re_path(r'article/(?P<pk>\d+)/',views.article_detail,name="article-detail")
+    re_path(r'article/create/',views.ArticleCreateView.as_view(),name="article-form"),
+    re_path(r'article/(?P<pk>\d+)/',views.ArticleDetailView.as_view(),name="article-detail"),
+    re_path(r'article/(?P<pk>\d+)/json',views.article_json,name="article-detail-json"),
 ]

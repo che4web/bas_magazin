@@ -1,0 +1,15 @@
+
+{%extends 'base.html'%}
+{%block main_container%}
+<h2>Страница Создания стать </h2>
+<a href={{main_url}}> ссылка на главную</a>
+
+<div>
+    <form method="POST">  
+    {{form.as_p}}
+    {% csrf_token %}
+    <button class="btn btn-primary"> сохранить</button>
+    </form>
+
+</div>
+{%endblock%}

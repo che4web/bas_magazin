@@ -1,0 +1,31 @@
+
+{%extends 'base.html'%}
+{%block main_container%}
+<h1>{{text}}</h1>
+<h2 id='title'>Страница статьи {{object.id}}</h2>
+<a href={{main_url}}> ссылка на главную</a>
+
+<div>
+    <h2 >{{object.title}}</h2>
+    <div>{{object.text}}</div>
+    <div>{{object.date}}</div>
+    <div>{{object}}</div>
+
+</div>
+<script>
+    let el = document.getElementById('title')
+    el.onclick= function(){
+        el.style.display='None'
+    }
+    console.log(el)
+    
+</script>
+<style>
+#title:hover{
+    color:red;
+    transition:all 1.4s
+        
+}
+</style>
+
+{%endblock%}
