@@ -1,66 +1,57 @@
 {%extends 'base.html'%}
 {%block main_container%}
-результат поиска по запросу: <b><span id="q_div"></span></b>
-<div id="articleResult"></div>
-{%endblock%}
-{%block sidebar%}
-<div class="card">
-    <div class="card-body">
-        введите заголовок
-        <input id="articleTitle"/>
-        <h3>Поиск </h3>
-        <form method="GET" action="/">
-            {{form.as_table}}
-            <button class="btn btn-primary"> поиск</button>
-        </form>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+{% verbatim%}
+<div id="app">
+    <input v-model="q" >
+    статиь по запросн: {{q}}
+    {{ message }}
+
+    <div v-for="art in articleList">
+        <div class="article__author"> {{art.author.username}}</div>
+        <div class="article__date"> {{art.date}}</div>
+        <h2> <a v-bind:href="art.get_absolute_url">{{art.title}}</a></h2>
+        <div>{{art.text}} </div>
+        <a v-bind:href="art.get_absolute_url">
+            <button class="btn btn-primary">
+                читать далее
+            </button>
+        </a>
     </div>
+
+
 </div>
-<div class="card">
-    <div class="card-body">
-        {% for auth in author_list%}
-
-        <div >
-            <div>{{auth.username}}: {{auth.article__count}} статей</div>
-
-        </div>
-        {%endfor%}
-
-    </div>
+{% endverbatim%}
 </div>
 <script>
-    function getArticle(){
-        let q = $('#articleTitle')[0].value
-        let url = "/article/search/"
-        //$.get(url,{q:q}).done(function(msg){
-        $.get(url,{q}).done(function(response){
-            let articleList= response.data
-            let tmp = ''
-            $('#q_div').html(q)
-            for(art of articleList){
-                console.log(art)
-                tmp  = tmp +  `
-                            <div>
-                                <div class="article__author"> ${art.author}</div>
-                                <div class="article__date"> ${art.date}</div>
-                                <h2> <a href="${art.get_absolute_url}">${art.title}</a></h2>
-                                <div>${art.text}</div>
-                                <a href="${art.get_absolute_url}">
-                                    <button class="btn btn-primary">
-                                        читать далее
-                                    </button>
-                                </a>
-                            </div>
-                            `
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Привет, Vue!',
+            articleList:[
+                {author:'che',title:'test'}
+            ],
+            q:''
+        },
+        watch:{
+            'q':function(){
+                this.getArticle()
             }
-            $("#articleResult").html(tmp)
-        })
-    }
-    $('#articleTitle').on('input',getArticle)
-    </script>
+        },
+        methods:{
+            getArticle:function(){
+                axios.get('/article/search/',{params:{q:this.q}}).then(response => this.articleList=response.data.data)
+            
+            }
+        }
+
+    })
+</script>
 <style >
-    .complit-item:hover{
-        background:#ff0000
-    }
+.complit-item:hover{
+    background:#ff0000
+}
     #articleResult{
         background:#ffffff;
 
