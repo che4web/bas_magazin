@@ -28,9 +28,17 @@ def article_json_search(request):
         art=[]
     art_list=[]
     for x in art:
+        if x.author:
+            author=x.author.username
+        else:
+            author=''
+
         art_dict ={
             'title':x.title,
-            'text':x.text
+            'text':x.text,
+            'author':author,
+            'data':x.date,
+            'get_absolute_url':x.get_absolute_url()
             }
         art_list.append(art_dict)
     return JsonResponse({'data':art_list})
