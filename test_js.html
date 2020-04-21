@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
+    </head>
+
+    <script>
+    </script>
+    <body >
+        <h1 onclick=" event.preventDefault()"> hello 
+            <button onclick="alert('button')" > click </button >
+        </h1>
+            <input id="name" value="123" myattr="test">
+            <button onclick="toggleTitle()">
+                hide
+            </button>
+
+<script>
+ $('#name').on('input',function(){
+    console.log($(this)[0].value)
+     $.ajax('/test').then(alert(1))
+ })
+</script>
+    </body>
+</html>

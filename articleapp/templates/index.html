@@ -7,6 +7,10 @@
 {%block sidebar%}
 <div class="card">
     <div class="card-body">
+        введите id
+        <input id="articleId"/>
+        заголовок статьи
+        <div id="articleTitle"></div>
         <h3>Поиск </h3>
         <form method="GET" action="/">
             {{form.as_table}}
@@ -26,4 +30,16 @@
 
     </div>
 </div>
+<script>
+    function getArticle(){
+        let artID = $('#articleId')[0].value
+        let url = "/article/"+artID +'/json/'
+        $.ajax(url).done(function(msg){
+            console.log("ajax done")
+            $("#articleTitle").html(msg.title)
+        })
+        console.log(artID)
+    }
+    $('#articleId').on('input',getArticle)
+    </script>
 {%endblock%}

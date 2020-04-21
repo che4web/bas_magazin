@@ -20,6 +20,21 @@ def logout_view(request):
     logout(request)
     return render(request,'logout.html',context)
 
+def article_json_search(request):
+    q = request.GET.get('q','')
+    if q:
+        art = Article.objects.filter(title__icontains=q)
+    else:
+        art=[]
+    art_list=[]
+    for x in art:
+        art_dict ={
+            'title':x.title,
+            'text':x.text
+            }
+        art_list.append(art_dict)
+    return JsonResponse({'data':art_list})
+
 def article_json(request,pk):
     art = Article.objects.get(id=pk)
     art_dict ={
